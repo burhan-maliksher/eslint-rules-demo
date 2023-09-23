@@ -9,8 +9,8 @@
     "lint": "next lint",
     "prepare": "husky install",
     "prettier": "npx prettier --write .",
-   "lint:dev": "eslint ./src -c .eslintrc.json --max-warnings=0",
-   "test": "pnpm prettier && pnpm lint:dev && pnpm build"
+    "lint:dev": "eslint ./src -c .eslintrc.json --max-warnings=0",
+    "test": "pnpm prettier && pnpm lint:dev && pnpm build"
   },
   "dependencies": {
     "@types/node": "20.6.3",
