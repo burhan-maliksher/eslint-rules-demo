@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Husky and esLint
 
-## Getting Started
+Follow the step wise guide to use `husky` and `eslint` for better development experience
 
-First, run the development server:
+1. Install `pnpm` globally
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+   ```cmd
+   npm i -g pnpm
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Create a next app and navigate to the newly created app directory
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   ```cmd
+   npx create-next-app@latest
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+3. Install and configure `husky` in the project.
 
-## Learn More
+   ```
+   pnpm dlx husky-init && pnpm install
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+   this will create `.husky` folder in the app. Now update `.husky/pre-commit` and on the last line replace `npm test` with `pnpm test`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. Install and configure prettier for tailwind
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+   ```cmd
+   pnpm add -D prettier
+   pnpm add -D prettier-plugin-tailwindcss
+   pnpm add -D eslint-config-prettier
+   ```
 
-## Deploy on Vercel
+   this will create a `.prettierrc.json`. If file not created create one
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```json
+   {
+     "trailingComma": "es5",
+     "semi": true,
+     "tabWidth": 2,
+     "singleQuote": true,
+     "jsxSingleQuote": true,
+     "plugins": ["prettier-plugin-tailwindcss"]
+   }
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+5. Install eslint in the application
+
+   ```cmd
+   pnpm add -D @typescript-eslint/eslint-plugin
+   pnpm add -D @typescript-eslint/parser
+   ```
+
+6. Update `.eslintrc.json` with the following to define eslint rules
+
+   ```json
+   {
+     "extends": [
+       "next/core-web-vitals",
+       "next",
+       "prettier",
+       "plugin:@typescript-eslint/recommended"
+     ],
+     "overrides": [],
+     "parser": "@typescript-eslint/parser",
+     "parserOptions": {
+       "ecmaVersion": "latest",
+       "sourceType": "module"
+     },
+     "plugins": ["@typescript-eslint"],
+     "rules": {
+       "prefer-const": "error",
+       "@typescript-eslint/no-unused-vars": [
+         "warn",
+         {
+           "ignoreRestSiblings": true
+         }
+       ],
+       "@typescript-eslint/no-explicit-any": "warn"
+     }
+   }
+   ```
+
+7. Update `package.json` and add following line in the `scripts` object
+
+   ```json
+   "prettier": "npx prettier --write .",
+   "lint:dev": "eslint ./src -c .eslintrc.json --max-warnings=0",
+   "test": "pnpm prettier && pnpm lint:dev && pnpm build"
+   ```
+
+8. Now when ever any commit is made the sequence of operation will be as follows
+   - format the files according to prettier rules
+   - check the files for eslint rules
+   - build the app
+   - if above three operations are performed successfully, commit the changes
