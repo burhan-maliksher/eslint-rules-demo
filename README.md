@@ -14,6 +14,12 @@ Follow the step wise guide to use `husky` and `eslint` for better development ex
    npx create-next-app@latest
    ```
 
+   or
+
+   ```cmd
+   pnpm create next-app@latest
+   ```
+
 3. Install and configure `husky` in the project.
 
    ```
